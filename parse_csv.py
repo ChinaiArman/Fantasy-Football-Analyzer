@@ -21,6 +21,26 @@ TEAM_CSVS = [file for file in glob.glob('data_team*.csv')]
 IGNORED_COLUMNS = ('Ovr', 'Name', 'Team')
 
 
+def add_adp_data(player_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add a column 'ADP' to the player_data DataFrame.
+
+    :param player_data: A Pandas DataFrame.
+    :return: player_data with an additional 'ADP' column containing the player's ADP data.
+    """
+    player_names = player_data.iloc[:, 0]
+    adp_df = pd.read_csv(PLAYER_ADPS)
+    players_with_adp = [player for player in adp_df.iloc[:, 1]]
+    def map_player_adp(player):
+        if player in players_with_adp:
+            return adp_df.iloc[players_with_adp.index(player), 11]
+        else:
+            return
+    player_data['ADP'] = list(map(map_player_adp, player_names))
+    return player_data
+    
+
+
 def create_combined_dataframe(primary_dataframe: pd.DataFrame, dataframes: list) -> pd.DataFrame:
     """
     Concatenate a list of Pandas DataFrames horizontally.
@@ -53,7 +73,9 @@ def main():
     """
     dataframes = [create_dataframe(file) for file in RB_CSVS]
     primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
-    create_combined_dataframe(primary_dataframe, dataframes).to_csv('rb_data_combined.csv')
+    primary_dataframe = add_adp_data(create_combined_dataframe(primary_dataframe, dataframes)).sort_values('ADP')
+    primary_dataframe.reset_index(inplace=True)
+    primary_dataframe.to_csv('rb_data_combined.csv')
 
 
 if __name__ == "__main__":
