@@ -20,7 +20,7 @@ MAIN_RB_CSV = './CSVs/data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob('./CSVs/data_rb*.csv') if 'stats' not in file]
 
 
-def add_extra_datapoints(player_data: pd.DataFrame, csv_name, index, column_name) -> pd.DataFrame:
+def add_extra_datapoints(player_data: pd.DataFrame, csv_name: str, index: int, column_name: str) -> pd.DataFrame:
     """
     Add a single column to the player_data DataFrame.
 
