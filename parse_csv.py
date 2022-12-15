@@ -14,6 +14,7 @@ import glob
 
 
 # Constants
+PLAYER_ADPS = 'data_player_adp.csv'
 MAIN_RB_CSV = 'data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob('data_rb*.csv') if 'stats' not in file]
 TEAM_CSVS = [file for file in glob.glob('data_team*.csv')]
@@ -35,9 +36,10 @@ def create_combined_dataframe(primary_dataframe: pd.DataFrame, dataframes: list)
 
 def create_dataframe(file: str) -> pd.DataFrame:
     """
-    
-    :param file:
-    :return:
+    Create a ready-to-concatenate dataframe from a CSV (sorted alphabetically without duplicated headers).
+
+    :param file: A string identifying a csv file within the directory. 
+    :return: A Pandas DataFrame, ready to be concatenated.
     """
     df = pd.read_csv(file).sort_values('Name')
     for column in IGNORED_COLUMNS:
