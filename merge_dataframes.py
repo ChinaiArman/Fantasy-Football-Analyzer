@@ -17,7 +17,6 @@ import glob
 PLAYER_ADPS = './CSVs/data_player_adp.csv'
 MAIN_RB_CSV = './CSVs/data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob('./CSVs/data_rb*.csv') if 'stats' not in file]
-IGNORED_COLUMNS = ('Ovr', 'Name', 'Team')
 
 
 def add_adp_data(player_data: pd.DataFrame) -> pd.DataFrame:
@@ -71,9 +70,7 @@ def create_dataframe(file: str) -> pd.DataFrame:
     :return: A Pandas DataFrame, ready to be concatenated.
     """
     df = pd.read_csv(file).sort_values('Name')
-    for column in IGNORED_COLUMNS:
-        df = df.loc[:, df.columns != column]
-    return df
+    return df.iloc[:, 3:]
 
 
 def main():
