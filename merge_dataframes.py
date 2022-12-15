@@ -14,12 +14,13 @@ import glob
 
 
 # Constants
+PLAYER_AGE = './CSVs/data_player_age.csv'
 PLAYER_ADPS = './CSVs/data_player_adp.csv'
 MAIN_RB_CSV = './CSVs/data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob('./CSVs/data_rb*.csv') if 'stats' not in file]
 
 
-def add_adp_data(player_data: pd.DataFrame) -> pd.DataFrame:
+def add_extra_datapoints(player_data: pd.DataFrame, csv_name, index, column_name) -> pd.DataFrame:
     """
     Add a column 'ADP' to the player_data DataFrame.
 
@@ -27,24 +28,24 @@ def add_adp_data(player_data: pd.DataFrame) -> pd.DataFrame:
     :return: player_data with an additional 'ADP' column containing the player's ADP data.
     """
     player_names = player_data.iloc[:, 0]
-    adp_df = pd.read_csv(PLAYER_ADPS)
-    players_with_adp = [player for player in adp_df.iloc[:, 1]]
+    df = pd.read_csv(csv_name)
+    players_in_csv = [player for player in df.iloc[:, 1]]
 
 
-    def map_player_adp(player: str) -> int:
+    def map_players_in_csv(player: str) -> int:
         """
         Return the player ADP from the adp DataFrame.
 
         :param: A string containing an identifier from the adp DataFrame.
         :return: An integer representing the player's ADP, or None if the player does not exist in the DataFrame.
         """
-        if player in players_with_adp:
-            return adp_df.iloc[players_with_adp.index(player), 11]
+        if player in players_in_csv:
+            return df.iloc[players_in_csv.index(player), index]
         else:
             return
 
             
-    player_data['ADP'] = list(map(map_player_adp, player_names))
+    player_data[column_name] = list(map(map_players_in_csv, player_names))
     return player_data
     
 
@@ -79,7 +80,10 @@ def main():
     """
     dataframes = [create_dataframe(file) for file in RB_CSVS]
     primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
-    primary_dataframe = add_adp_data(create_combined_dataframe(primary_dataframe, dataframes)).sort_values('ADP')
+    primary_dataframe = create_combined_dataframe(primary_dataframe, dataframes)
+    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 11, 'ADP')
+    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_AGE, 4, 'age')
+    primary_dataframe = primary_dataframe.sort_values('ADP')
     primary_dataframe.reset_index(inplace=True)
     primary_dataframe.to_csv('rb_data_combined.csv')
 
