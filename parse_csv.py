@@ -11,9 +11,8 @@ import os
 import numpy as np
 
 
-RB_CSVS = [file for file in os.listdir("c:/Users/arman/OneDrive/Documents/GitHub/Fantasy-Football-Analyzer") if file.startswith('data_rb')]
-TEAM_CSVS = [file for file in os.listdir("c:/Users/arman/OneDrive/Documents/GitHub/Fantasy-Football-Analyzer") if file.startswith('data_team')]
-print(os.getcwd())
+RB_CSVS =[file for file in glob.glob('data_rb*.csv')]
+TEAM_CSVS =[file for file in glob.glob('data_team*.csv')]
 
 
 def create_combined_csv():
