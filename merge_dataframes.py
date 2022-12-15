@@ -22,10 +22,13 @@ RB_CSVS = [file for file in glob.glob('./CSVs/data_rb*.csv') if 'stats' not in f
 
 def add_extra_datapoints(player_data: pd.DataFrame, csv_name, index, column_name) -> pd.DataFrame:
     """
-    Add a column 'ADP' to the player_data DataFrame.
+    Add a single column to the player_data DataFrame.
 
     :param player_data: A Pandas DataFrame.
-    :return: player_data with an additional 'ADP' column containing the player's ADP data.
+    :param csv_name: A string representing the name of the CSV to add a column from.
+    :param index: An integer representing the index of the column to add to the Pandas DataFrame.
+    :param column_name: An identifier to name the column in the Pandas DataFrame.
+    :return: player_data with an added column containing additional player data.
     """
     player_names = player_data.iloc[:, 0]
     df = pd.read_csv(csv_name)
@@ -34,10 +37,10 @@ def add_extra_datapoints(player_data: pd.DataFrame, csv_name, index, column_name
 
     def map_players_in_csv(player: str) -> int:
         """
-        Return the player ADP from the adp DataFrame.
+        Return the player data from the column being added to the player_data DataFrame.
 
         :param: A string containing an identifier from the adp DataFrame.
-        :return: An integer representing the player's ADP, or None if the player does not exist in the DataFrame.
+        :return: A value representing the additional player information, or None if the player does not exist in the additional DataFrame.
         """
         if player in players_in_csv:
             return df.iloc[players_in_csv.index(player), index]
