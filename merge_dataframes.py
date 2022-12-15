@@ -17,7 +17,6 @@ import glob
 PLAYER_ADPS = 'data_player_adp.csv'
 MAIN_RB_CSV = 'data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob('data_rb*.csv') if 'stats' not in file]
-TEAM_CSVS = [file for file in glob.glob('data_team*.csv')]
 IGNORED_COLUMNS = ('Ovr', 'Name', 'Team')
 
 
