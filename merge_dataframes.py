@@ -30,11 +30,21 @@ def add_adp_data(player_data: pd.DataFrame) -> pd.DataFrame:
     player_names = player_data.iloc[:, 0]
     adp_df = pd.read_csv(PLAYER_ADPS)
     players_with_adp = [player for player in adp_df.iloc[:, 1]]
-    def map_player_adp(player):
+
+
+    def map_player_adp(player: str) -> int:
+        """
+        Return the player ADP from the adp DataFrame.
+
+        :param: A string containing an identifier from the adp DataFrame.
+        :return: An integer representing the player's ADP, or None if the player does not exist in the DataFrame.
+        """
         if player in players_with_adp:
             return adp_df.iloc[players_with_adp.index(player), 11]
         else:
             return
+
+            
     player_data['ADP'] = list(map(map_player_adp, player_names))
     return player_data
     
