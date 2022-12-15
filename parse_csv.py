@@ -1,14 +1,15 @@
 """
-Arman Chinai
-
 A python script to parse multiple CSV files and create a single CSV file.
+
+REQUIREMENTS FOR CSVS:
+- CSVs must only contain data for one 'position' (i.e. only RB data, only team data, etc.).
+- CSVs must have unique column headers.
+- All CSVs must have the same players.
 """
 
 
 import pandas as pd
 import glob
-import os
-import numpy as np
 
 
 MAIN_RB_CSV = 'data_rb_stats.csv'
@@ -33,7 +34,7 @@ def create_dataframe(file):
 def main():
     dataframes = [create_dataframe(file) for file in RB_CSVS]
     primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
-    combined_dataframe = create_combined_dataframe(primary_dataframe, dataframes).to_csv('rb_data_combined.csv')
+    create_combined_dataframe(primary_dataframe, dataframes).to_csv('rb_data_combined.csv')
 
 
 if __name__ == "__main__":
