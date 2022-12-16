@@ -11,16 +11,18 @@ REQUIREMENTS FOR CSVS:
 # Imports
 import pandas as pd
 import glob
+import os
 
 
 # Constants
-PLAYER_AGE = './CSVs/data_player_age.csv'
-PLAYER_ADPS = './CSVs/data_player_adp.csv'
-MAIN_RB_CSV = './CSVs/data_rb_stats.csv'
-RB_CSVS = [file for file in glob.glob('./CSVs/data_rb*.csv') if 'stats' not in file]
+YEAR = 2021
+PLAYER_AGE = f'./{YEAR}_data/data_player_age.csv'
+PLAYER_ADPS = f'./{YEAR}_data/data_player_adp.csv'
+MAIN_RB_CSV = f'./{YEAR}_data/data_rb_stats.csv'
+RB_CSVS = [file for file in glob.glob(f'./{YEAR}_data/data_rb*.csv') if 'stats' not in file]
 
 
-def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_index: int, added_index: int, column_name: str) -> pd.DataFrame:
+def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_index: int, added_index: int, column_name: str, base_index: int=0) -> pd.DataFrame:
     """
     Add a single column to the base_data DataFrame.
 
@@ -31,7 +33,7 @@ def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_inde
     :param column_name: An identifier to name the column in the Pandas DataFrame.
     :return: base_data with an added column containing additional data.
     """
-    base_identifiers = base_data.iloc[:, 0]
+    base_identifiers = base_data.iloc[:, base_index]
     df = pd.read_csv(csv_name)
     identifiers_in_csv = [identifier for identifier in df.iloc[:, identifier_index]]
 
@@ -106,7 +108,7 @@ def main():
     primary_dataframe.drop('index', axis=1, inplace=True)
 
     # Move to csv.
-    primary_dataframe.to_csv('rb_data_combined.csv')
+    primary_dataframe.to_csv(f'./{YEAR}_data/compiled_rb_data.csv')
 
 
 if __name__ == "__main__":
