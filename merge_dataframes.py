@@ -20,38 +20,38 @@ MAIN_RB_CSV = './CSVs/data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob('./CSVs/data_rb*.csv') if 'stats' not in file]
 
 
-def add_extra_datapoints(player_data: pd.DataFrame, csv_name: str, index: int, column_name: str) -> pd.DataFrame:
+def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_index: int, added_index: int, column_name: str) -> pd.DataFrame:
     """
-    Add a single column to the player_data DataFrame.
+    Add a single column to the base_data DataFrame.
 
-    :param player_data: A Pandas DataFrame.
+    :param base_data: A Pandas DataFrame.
     :param csv_name: A string representing the name of the CSV to add a column from.
-    :param index: An integer representing the index of the column to add to the Pandas DataFrame.
+    :param identifier_index: An integer representing the index to use as an identifier to match with base_data. 
+    :param added_index: An integer representing the index of the column to add to the Pandas DataFrame.
     :param column_name: An identifier to name the column in the Pandas DataFrame.
-    :return: player_data with an added column containing additional player data.
+    :return: base_data with an added column containing additional data.
     """
-    player_names = player_data.iloc[:, 0]
+    base_identifiers = base_data.iloc[:, 0]
     df = pd.read_csv(csv_name)
-    players_in_csv = [player for player in df.iloc[:, 1]]
+    identifiers_in_csv = [identifier for identifier in df.iloc[:, identifier_index]]
 
 
-    def map_players_in_csv(player: str) -> int:
+    def map_identifiers_in_csv(identifier: str) -> int:
         """
         Return the player data from the column being added to the player_data DataFrame.
 
         :param: A string containing an identifier from the adp DataFrame.
         :return: A value representing the additional player information, or None if the player does not exist in the additional DataFrame.
         """
-        if player in players_in_csv:
-            return df.iloc[players_in_csv.index(player), index]
+        if identifier in identifiers_in_csv:
+            return df.iloc[identifiers_in_csv.index(identifier), added_index]
         else:
             return
 
             
-    player_data[column_name] = list(map(map_players_in_csv, player_names))
-    return player_data
+    base_data[column_name] = list(map(map_identifiers_in_csv, base_identifiers))
+    return base_data
     
-
 
 def create_combined_dataframe(primary_dataframe: pd.DataFrame, dataframes: list) -> pd.DataFrame:
     """
@@ -66,28 +66,46 @@ def create_combined_dataframe(primary_dataframe: pd.DataFrame, dataframes: list)
     return primary_dataframe
 
 
-def create_dataframe(file: str) -> pd.DataFrame:
+def create_dataframe(file: str, sorting_identifier: str, start: int) -> pd.DataFrame:
     """
     Create a ready-to-concatenate dataframe from a CSV (sorted alphabetically without duplicated headers).
 
-    :param file: A string identifying a csv file within the directory. 
+    :param file: A string identifying a csv file within the directory.
+    :param sorting_identifier: A string identifying a column within the dataframe to sort by.
+    :param start: An integer representing the column from which to keep values from (in order to ignore identifier columns)
     :return: A Pandas DataFrame, ready to be concatenated.
     """
-    df = pd.read_csv(file).sort_values('Name')
-    return df.iloc[:, 3:]
+    df = pd.read_csv(file).sort_values(sorting_identifier)
+    return df.iloc[:, start:]
 
 
 def main():
     """
-    Execute the program
+    Execute the program.
     """
-    dataframes = [create_dataframe(file) for file in RB_CSVS]
+    # Create primary DataFrame.
     primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
+
+    # Create extra DataFrames.
+    dataframes = [create_dataframe(file, 'Name', 3) for file in RB_CSVS]
+
+    # Merge DataFrames.
     primary_dataframe = create_combined_dataframe(primary_dataframe, dataframes)
-    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 11, 'ADP')
-    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_AGE, 4, 'age')
+
+    # Add extra column (ADP).
+    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 11, 'ADP')
+
+    # Add extra column (age).
+    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
+
+    # Sort by ADP.
     primary_dataframe = primary_dataframe.sort_values('ADP')
+
+    # Fix indexes.
     primary_dataframe.reset_index(inplace=True)
+    primary_dataframe.drop('index', axis=1, inplace=True)
+
+    # Move to csv.
     primary_dataframe.to_csv('rb_data_combined.csv')
 
 
