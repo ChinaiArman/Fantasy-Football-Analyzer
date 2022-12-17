@@ -30,6 +30,7 @@ def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_inde
     :param identifier_index: An integer representing the index to use as an identifier to match with base_data. 
     :param added_index: An integer representing the index of the column to add to the Pandas DataFrame.
     :param column_name: An identifier to name the column in the Pandas DataFrame.
+    :param base_index: The column in the base DataFrame to match the two DataFrames with (default 0)
     :return: base_data with an added column containing additional data.
     """
     base_identifiers = base_data.iloc[:, base_index]
