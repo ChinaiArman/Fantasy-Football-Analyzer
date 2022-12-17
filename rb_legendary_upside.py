@@ -16,6 +16,7 @@ YEAR = 2021
 RELEVANT_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
 PLAYER_AGE = f'./{YEAR}_data/data_player_age.csv'
 OL_RANK = f'./{YEAR}_data/data_team_olrank.csv'
+TEAM_TARGETS = f'./{YEAR}_data/data_team_trgt%.csv'
 PLAYER_ADPS = f'./{YEAR}_data/data_player_adp.csv'
 MAIN_RB_CSV = f'./{YEAR}_data/data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob(f'./{YEAR}_data/data_rb*.csv') if 'stats' not in file]
@@ -45,7 +46,8 @@ def main() -> None:
     if not os.path.exists(f'./{YEAR}_data/compiled_rb_data.csv'):
         create_rb_csv()
     legendary_runningback_candidates = pd.read_csv(f'./{YEAR}_data/compiled_rb_data.csv', usecols = RELEVANT_COLUMNS, low_memory = True)
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'OL_RANK', base_index=1)
+    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index=1)
+    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index=1)
     print(legendary_runningback_candidates)
 
 
