@@ -42,7 +42,7 @@ def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_inde
         """
         Return the player data from the column being added to the player_data DataFrame.
 
-        :param: A string containing an identifier from the adp DataFrame.
+        :param identifier: A string containing an identifier from the adp DataFrame.
         :return: A value representing the additional player information, or None if the player does not exist in the additional DataFrame.
         """
         if identifier in identifiers_in_csv:
