@@ -101,6 +101,7 @@ def main() -> None:
 
     # Sort by ADP.
     primary_dataframe = primary_dataframe.sort_values('ADP')
+    primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
 
     # Fix indexes.
     primary_dataframe.reset_index(inplace=True)
