@@ -61,11 +61,9 @@ def remove_non_legendary_runningbacks(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def legendary_runningbacks() -> None:
+def main() -> None:
     """
-    Create a CSV containing the RBs that have 'Legendary Upside'.
-    
-    :return: None
+    Execute the program.
     """
     if not os.path.exists(f'./{YEAR - 1}_data/compiled_rb_data.csv'):
         create_rb_csv()
@@ -82,4 +80,4 @@ def legendary_runningbacks() -> None:
 
 
 if __name__ == '__main__':
-    legendary_runningbacks()
+    main()
