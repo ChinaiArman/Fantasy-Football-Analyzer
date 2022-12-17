@@ -44,6 +44,8 @@ def remove_non_legendary_runningbacks(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     Remove RBs that do not have legendary upside from a DataFrame.
     
+    :param dataframe: A dataframe containing RB player data.
+    :return: A dataframe, containing the RBs that have 'Legendary Upside'.
     """
     dataframe['trgt%'] = (dataframe['recTarg'] / ((dataframe['teamTargets'] / 17) * dataframe['games'])) * 100
     dataframe = dataframe[dataframe['ADP'] <= 26]
@@ -60,12 +62,19 @@ def remove_non_legendary_runningbacks(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 
 def legendary_runningbacks() -> None:
+    """
+    Create a CSV containing the RBs that have 'Legendary Upside'.
+    
+    :return: None
+    """
     if not os.path.exists(f'./{YEAR - 1}_data/compiled_rb_data.csv'):
         create_rb_csv()
     legendary_runningback_candidates = pd.read_csv(f'./{YEAR - 1}_data/compiled_rb_data.csv', usecols = RELEVANT_COLUMNS, low_memory = True)
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index=1)
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index=1)
+    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index = 1)
+    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
     legendary_runningbacks = remove_non_legendary_runningbacks(legendary_runningback_candidates)
+    legendary_runningbacks.reset_index(inplace=True)
+    legendary_runningbacks.drop('index', axis=1, inplace=True)
     if not os.path.exists(f'./{YEAR}_calculations'):
         final_directory = os.path.join(os.getcwd(), f'{YEAR}_calculations')
         os.makedirs(final_directory)
