@@ -6,12 +6,14 @@ A python module with functions designed to identify RBs with legendary upside.
 # Imports
 import pandas as pd
 import glob
+import os
 
 import merge_dataframes as md
 
 
 # CSV Constants
 YEAR = 2021
+RELEVANT_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
 PLAYER_AGE = f'./{YEAR}_data/data_player_age.csv'
 PLAYER_ADPS = f'./{YEAR}_data/data_player_adp.csv'
 MAIN_RB_CSV = f'./{YEAR}_data/data_rb_stats.csv'
@@ -28,13 +30,17 @@ def create_rb_csv() -> None:
     primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 11, 'ADP')
     primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
     primary_dataframe = primary_dataframe.sort_values('ADP')
+    primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
     primary_dataframe.reset_index(inplace=True)
     primary_dataframe.drop('index', axis=1, inplace=True)
     primary_dataframe.to_csv(f'./{YEAR}_data/compiled_rb_data.csv')
 
 
 def main() -> None:
-    create_rb_csv()
+    if not os.path.exists(f'./{YEAR}_data/compiled_rb_data.csv'):
+        create_rb_csv()
+    runningbacks = pd.read_csv(f'./{YEAR}_data/compiled_rb_data.csv', usecols = RELEVANT_COLUMNS, low_memory = True)
+    print(runningbacks)
 
 
 if __name__ == '__main__':
