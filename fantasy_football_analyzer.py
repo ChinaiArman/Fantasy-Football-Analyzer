@@ -34,7 +34,7 @@ def create_rb_csv() -> None:
         primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
         dataframes = [md.create_dataframe(file, 'Name', 3) for file in RB_CSVS]
         primary_dataframe = md.create_combined_dataframe(primary_dataframe, dataframes)
-        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 11, 'ADP')
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
         primary_dataframe = primary_dataframe.sort_values('ADP')
         primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
