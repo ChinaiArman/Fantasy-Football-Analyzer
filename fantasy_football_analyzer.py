@@ -52,7 +52,7 @@ def legendary_runningbacks() -> None:
     legendary_runningback_candidates = pd.read_csv(f'./{YEAR - 1}_data/compiled_rb_data.csv', usecols = RELEVANT_COLUMNS, low_memory = True)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index = 1)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-    legendary_runningbacks = rblu.remove_non_legendary_runningbacks(legendary_runningback_candidates)
+    legendary_runningbacks = rblu.remove_non_legendary_rbs(legendary_runningback_candidates)
     legendary_runningbacks.reset_index(inplace=True)
     legendary_runningbacks.drop('index', axis=1, inplace=True)
     if not os.path.exists(f'./{YEAR}_calculations'):

@@ -17,7 +17,7 @@ OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
 TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 
 
-def remove_non_legendary_runningbacks(dataframe: pd.DataFrame) -> pd.DataFrame:
+def remove_non_legendary_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     Remove RBs that do not have legendary upside from a DataFrame.
     
@@ -44,7 +44,7 @@ def main() -> None:
     legendary_runningback_candidates = pd.read_csv(f'./{YEAR - 1}_data/compiled_rb_data.csv', usecols = RELEVANT_COLUMNS, low_memory = True)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index = 1)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-    legendary_runningbacks = remove_non_legendary_runningbacks(legendary_runningback_candidates)
+    legendary_runningbacks = remove_non_legendary_rbs(legendary_runningback_candidates)
     legendary_runningbacks.reset_index(inplace=True)
     legendary_runningbacks.drop('index', axis=1, inplace=True)
     if not os.path.exists(f'./{YEAR}_calculations'):
