@@ -1,5 +1,5 @@
 """
-A python script to parse multiple CSV files and create a single CSV file.
+A python module with functions able to parse multiple CSV files and create a single CSV file.
 
 REQUIREMENTS FOR CSVS:
 - CSVs must only contain data for one 'position' (i.e. only RB data, only team data, etc.).
@@ -11,7 +11,6 @@ REQUIREMENTS FOR CSVS:
 # Imports
 import pandas as pd
 import glob
-import os
 
 
 # Constants
@@ -81,7 +80,7 @@ def create_dataframe(file: str, sorting_identifier: str, start: int) -> pd.DataF
     return df.iloc[:, start:]
 
 
-def main():
+def main() -> None:
     """
     Execute the program.
     """
