@@ -29,9 +29,8 @@ def remove_non_legendary_runningbacks(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = dataframe[ 
         ((dataframe['trgt%'] >= 9) & (dataframe['age'] <= 22)) |
         ((dataframe['trgt%'] >= 11) & (dataframe['age'] <= 23)) |
-        ((dataframe['trgt%'] >= 13) & (dataframe['age'] <= 24)) |
         ((dataframe['trgt%'] >= 13) & (dataframe['age'] <= 25)) |
-        ((dataframe['trgt%'] >= 15) & (dataframe['age'] <= 26))
+        ((dataframe['trgt%'] >= 15) & (dataframe['age'] <= 27))
         ]
     dataframe = dataframe[dataframe['olRank'] <= 24]
     dataframe = dataframe.drop('teamTargets', axis=1)
