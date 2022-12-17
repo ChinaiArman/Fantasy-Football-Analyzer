@@ -14,11 +14,11 @@ import glob
 
 
 # Constants
-YEAR = 2021
-PLAYER_AGE = f'./{YEAR}_data/data_player_age.csv'
-PLAYER_ADPS = f'./{YEAR}_data/data_player_adp.csv'
-MAIN_RB_CSV = f'./{YEAR}_data/data_rb_stats.csv'
-RB_CSVS = [file for file in glob.glob(f'./{YEAR}_data/data_rb*.csv') if 'stats' not in file]
+YEAR = 2022
+PLAYER_AGE = f'./{YEAR - 1}_data/data_player_age.csv'
+PLAYER_ADPS = f'./{YEAR - 1}_data/data_player_adp.csv'
+MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
+RB_CSVS = [file for file in glob.glob(f'./{YEAR - 1}_data/data_rb*.csv') if 'stats' not in file]
 
 
 def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_index: int, added_index: int, column_name: str, base_index: int=0) -> pd.DataFrame:
@@ -109,7 +109,7 @@ def main() -> None:
     primary_dataframe.drop('index', axis=1, inplace=True)
 
     # Move to csv.
-    primary_dataframe.to_csv(f'./{YEAR}_data/compiled_rb_data.csv')
+    primary_dataframe.to_csv(f'./{YEAR - 1}_data/compiled_rb_data.csv')
 
 
 if __name__ == "__main__":
