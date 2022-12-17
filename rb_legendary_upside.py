@@ -12,7 +12,10 @@ import merge_dataframes as md
 
 # Constants
 YEAR = 2022
-RELEVANT_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
+CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
+COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
+LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
+LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
 OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
 TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 
@@ -41,16 +44,16 @@ def main() -> None:
     """
     Execute the program.
     """
-    legendary_runningback_candidates = pd.read_csv(f'./{YEAR - 1}_data/compiled_rb_data.csv', usecols = RELEVANT_COLUMNS, low_memory = True)
+    legendary_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = LEGENDARY_RB_REL_COLUMNS, low_memory = True)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index = 1)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
     legendary_runningbacks = remove_non_legendary_rbs(legendary_runningback_candidates)
     legendary_runningbacks.reset_index(inplace=True)
     legendary_runningbacks.drop('index', axis=1, inplace=True)
-    if not os.path.exists(f'./{YEAR}_calculations'):
-        final_directory = os.path.join(os.getcwd(), f'{YEAR}_calculations')
+    if not os.path.exists(CALCULATIONS_FOLDER):
+        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
         os.makedirs(final_directory)
-    legendary_runningbacks.to_csv(f'./{YEAR}_calculations/legendary_runningbacks.csv')
+    legendary_runningbacks.to_csv(LEGENDARY_RB_FILE)
 
 
 if __name__ == '__main__':

@@ -12,16 +12,12 @@ import merge_dataframes as md
 
 # Constants
 YEAR = 2022
-RELEVANT_COLUMNS = []
-
-
-def create_wr_csv() -> None:
-    """
-    Create a containing all the WR data for WRs with an ADP.
-
-    :return: None.
-    """
-    pass
+CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
+COMPILED_WR_DATA = f'./{YEAR - 1}_data/compiled_wr_data.csv'
+BREAKOUT_WR_FILE = f'./{YEAR}_calculations/breakout_receivers.csv'
+BREAKOUT_WR_REL_COLUMNS = []
+# OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
+# TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 
 
 def remove_non_breakout_wr(dataframe: pd.DataFrame) -> pd.DataFrame:
