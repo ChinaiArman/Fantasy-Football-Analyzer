@@ -30,7 +30,7 @@ def remove_non_legendary_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe['trgt%'] = (dataframe['recTarg'] / ((dataframe['teamTargets'] / 17) * dataframe['games'])) * 100
     dataframe = dataframe[dataframe['ADP'] <= 26]
     dataframe = dataframe[ 
-        ((dataframe['trgt%'] >= 9) & (dataframe['age'] <= 22)) |
+        ((dataframe['trgt%'] >= 7) & (dataframe['age'] <= 22)) |
         ((dataframe['trgt%'] >= 11) & (dataframe['age'] <= 23)) |
         ((dataframe['trgt%'] >= 13) & (dataframe['age'] <= 25)) |
         ((dataframe['trgt%'] >= 15) & (dataframe['age'] <= 27))
