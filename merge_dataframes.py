@@ -18,7 +18,6 @@ YEAR = 2022
 PLAYER_AGE = f'./{YEAR - 1}_data/data_player_age.csv'
 PLAYER_ADPS = f'./{YEAR - 1}_data/data_player_adp.csv'
 MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
-RB_CSVS = [file for file in glob.glob(f'./{YEAR - 1}_data/data_rb*.csv') if 'stats' not in file]
 
 
 def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_index: int, added_index: int, column_name: str, base_index: int=0) -> pd.DataFrame:
@@ -55,44 +54,12 @@ def add_extra_datapoints(base_data: pd.DataFrame, csv_name: str, identifier_inde
     return base_data
     
 
-def create_combined_dataframe(primary_dataframe: pd.DataFrame, dataframes: list) -> pd.DataFrame:
-    """
-    Concatenate a list of Pandas DataFrames horizontally.
-
-    :param primary_dataframe: A Pandas DataFrame.
-    :param dataframes: A list of DataFrames to be horizontally concatenated to primary_dataframe.
-    :return: A Pandas DataFrame containing all of the DataFrames horizontally concatenated together. 
-    """
-    for dataframe in dataframes:
-        primary_dataframe = pd.concat([primary_dataframe, dataframe.set_index(primary_dataframe.index)], axis=1)
-    return primary_dataframe
-
-
-def create_dataframe(file: str, sorting_identifier: str, start: int) -> pd.DataFrame:
-    """
-    Create a ready-to-concatenate dataframe from a CSV (sorted alphabetically without duplicated headers).
-
-    :param file: A string identifying a csv file within the directory.
-    :param sorting_identifier: A string identifying a column within the dataframe to sort by.
-    :param start: An integer representing the column from which to keep values from (in order to ignore identifier columns)
-    :return: A Pandas DataFrame, ready to be concatenated.
-    """
-    df = pd.read_csv(file).sort_values(sorting_identifier)
-    return df.iloc[:, start:]
-
-
 def main() -> None:
     """
     Execute the program.
     """
     # Create primary DataFrame.
     primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
-
-    # Create extra DataFrames.
-    dataframes = [create_dataframe(file, 'Name', 3) for file in RB_CSVS]
-
-    # Merge DataFrames.
-    primary_dataframe = create_combined_dataframe(primary_dataframe, dataframes)
 
     # Add extra column (ADP).
     primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 11, 'ADP')
