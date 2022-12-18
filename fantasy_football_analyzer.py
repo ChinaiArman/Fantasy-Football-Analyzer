@@ -16,19 +16,20 @@ import wr_analysis as wra
 # Year Constants
 YEAR = 2022
 CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
-OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
+TEAM_OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
 TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 
 # Player Constants
 PLAYER_AGE = f'./{YEAR - 1}_data/data_player_age.csv'
 PLAYER_ADPS = f'./{YEAR - 1}_data/data_player_adp.csv'
+PLAYER_RUSH_GRADES = f'./{YEAR - 1}_data/data_player_rushgrade.csv'
 
 # RB Constants
 COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
 LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
 LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
 DEADZONE_RB_FILE = f'./{YEAR}_calculations/deadzone_runningbacks.csv'
-DEADZONE_RB_REL_COLUMNS = []
+DEADZONE_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'rushCarries']
 MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
 
 # WR Constants
@@ -86,7 +87,7 @@ def legendary_runningbacks() -> None:
     :return: None.
     """
     legendary_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = LEGENDARY_RB_REL_COLUMNS, low_memory = True)
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index = 1)
+    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
     legendary_runningbacks = rba.remove_non_legendary_rbs(legendary_runningback_candidates)
     legendary_runningbacks.reset_index(inplace=True)
@@ -97,10 +98,31 @@ def legendary_runningbacks() -> None:
     legendary_runningbacks.to_csv(LEGENDARY_RB_FILE)
 
 
+def deadzone_runningbacks():
+    """
+    Identify RBs with 'Deadzone Upside' and create a CSV to display the result of the calculation.
+    
+    :return: None.
+    """
+    deadzone_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = DEADZONE_RB_REL_COLUMNS, low_memory = True)
+    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 0)
+    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
+    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
+    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, PLAYER_RUSH_GRADES, 0, 6, 'forcedMissedTackles', base_index = 0)
+    deadzone_runningback = rba.remove_deadzone_rbs(deadzone_runningback_candidates)
+    deadzone_runningback.reset_index(inplace=True)
+    deadzone_runningback.drop('index', axis=1, inplace=True)
+    if not os.path.exists(CALCULATIONS_FOLDER):
+        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
+        os.makedirs(final_directory)
+    deadzone_runningback.to_csv(DEADZONE_RB_FILE)
+
+
 def main() -> None:
     create_rb_csv()
     create_wr_csv()
     legendary_runningbacks()
+    deadzone_runningbacks()
 
 
 if __name__ == '__main__':
