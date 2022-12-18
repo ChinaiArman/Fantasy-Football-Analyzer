@@ -27,6 +27,8 @@ PLAYER_ADPS = f'./{YEAR - 1}_data/data_player_adp.csv'
 COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
 LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
 LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
+DEADZONE_RB_FILE = f'./{YEAR}_calculations/deadzone_runningbacks.csv'
+DEADZONE_RB_REL_COLUMNS = []
 MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
 RB_CSVS = [file for file in glob.glob(f'./{YEAR - 1}_data/data_rb*.csv') if 'stats' not in file]
 

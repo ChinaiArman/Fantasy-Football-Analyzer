@@ -14,10 +14,18 @@ import merge_dataframes as md
 YEAR = 2022
 CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
 COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
-LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
-LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
+
+# Extra Datapoints
 OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
 TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
+
+# Legendary RBs
+LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
+LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
+
+# Deadzone RBs
+DEADZONE_RB_FILE = f'./{YEAR}_calculations/deadzone_runningbacks.csv'
+DEADZONE_RB_REL_COLUMNS = []
 
 
 def remove_non_legendary_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -38,6 +46,16 @@ def remove_non_legendary_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = dataframe[dataframe['olRank'] <= 24]
     dataframe = dataframe.drop('teamTargets', axis=1)
     return dataframe
+
+
+def remove_deadzone_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove RBs that fall victim to the 'Deadzone' (middle round RBs) from a DataFrame.
+    
+    :param dataframe: A dataframe containing RB player data.
+    :return: A dataframe, containing the RBs that have the upside to overcome the 'Deadzone'.
+    """
+    pass
 
 
 def main() -> None:
