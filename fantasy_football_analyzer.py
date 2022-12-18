@@ -38,6 +38,14 @@ MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
 WR_CSVS = [file for file in glob.glob(f'./{YEAR - 1}_data/data_wr*.csv') if 'stats' not in file]
 
 
+# QB Constants
+COMPILED_QB_DATA = f'./{YEAR - 1}_data/compiled_qb_data.csv'
+MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
+BREAKOUT_QB_REL_COLUMNS = []
+MAIN_QB_CSV = f'./{YEAR - 1}_data/data_qb_stats.csv'
+QB_CSVS = [file for file in glob.glob(f'./{YEAR - 1}_data/data_qb*.csv') if 'stats' not in file]
+
+
 def create_rb_csv() -> None:
     """
     Create a containing all the RB data for RBs with an ADP.
