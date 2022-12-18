@@ -16,6 +16,8 @@ import wr_analysis as wra
 # Year Constants
 YEAR = 2022
 CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
+
+# Team Constants
 TEAM_OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
 TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 
