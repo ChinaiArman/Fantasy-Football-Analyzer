@@ -9,8 +9,8 @@ import glob
 import os
 
 import merge_dataframes as md
-import rb_legendary_upside as rblu
-import wr_breakouts as wrb
+import rb_analysis as rba
+import wr_analysis as wra
 
 
 # Year Constants
@@ -93,7 +93,7 @@ def legendary_runningbacks() -> None:
     legendary_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = LEGENDARY_RB_REL_COLUMNS, low_memory = True)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, OL_RANK, 0, 1, 'olRank', base_index = 1)
     legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-    legendary_runningbacks = rblu.remove_non_legendary_rbs(legendary_runningback_candidates)
+    legendary_runningbacks = rba.remove_non_legendary_rbs(legendary_runningback_candidates)
     legendary_runningbacks.reset_index(inplace=True)
     legendary_runningbacks.drop('index', axis=1, inplace=True)
     if not os.path.exists(CALCULATIONS_FOLDER):
