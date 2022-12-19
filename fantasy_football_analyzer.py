@@ -32,6 +32,8 @@ LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
 LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
 DEADZONE_RB_FILE = f'./{YEAR}_calculations/deadzone_runningbacks.csv'
 DEADZONE_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'rushCarries']
+HERO_RB_FILE = f'./{YEAR}_calculations/hero_runningbacks.csv'
+HERO_RB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age']
 MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
 
 # WR Constants
@@ -100,7 +102,7 @@ def legendary_runningbacks() -> None:
     legendary_runningbacks.to_csv(LEGENDARY_RB_FILE)
 
 
-def deadzone_runningbacks():
+def deadzone_runningbacks() -> None:
     """
     Identify RBs with 'Deadzone Upside' and create a CSV to display the result of the calculation.
     
@@ -120,11 +122,29 @@ def deadzone_runningbacks():
     deadzone_runningback.to_csv(DEADZONE_RB_FILE)
 
 
+def hero_pair_runningbacks() -> None:
+    """
+    Identify Hero RB pairs and create a CSV to display the result of the calculation.
+    
+    :return: None.
+    """
+    hero_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = HERO_RB_REL_COLUMNS, low_memory = True)
+    hero_runningback_candidates = md.add_extra_datapoints(hero_runningback_candidates, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
+    hero_runningback = rba.remove_non_hero_rb_pairs(hero_runningback_candidates)
+    hero_runningback.reset_index(inplace=True)
+    hero_runningback.drop('index', axis=1, inplace=True)
+    if not os.path.exists(CALCULATIONS_FOLDER):
+        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
+        os.makedirs(final_directory)
+    hero_runningback.to_csv(HERO_RB_FILE) 
+
+
 def main() -> None:
     create_rb_csv()
     create_wr_csv()
     legendary_runningbacks()
     deadzone_runningbacks()
+    hero_pair_runningbacks()
 
 
 if __name__ == '__main__':
