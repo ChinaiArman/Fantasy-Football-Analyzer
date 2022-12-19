@@ -85,6 +85,8 @@ def remove_non_hero_rb_pairs(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = dataframe[(dataframe['ADP'] >= 81) & (dataframe['ADP'] <= 120)]
     dataframe = dataframe[dataframe['age'] <= 28]
     dataframe = dataframe[dataframe['rushGrade'] >= 80]
+    removable_elements = [element for element in dataframe.columns if element not in ['player', 'team', 'age', 'ADP']]
+    dataframe = dataframe.drop((element for element in removable_elements), axis=1)
     return dataframe
 
 
