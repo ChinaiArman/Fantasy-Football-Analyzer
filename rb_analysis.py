@@ -30,7 +30,7 @@ DEADZONE_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', '
 
 # Hero RB Pairs
 HERO_RB_FILE = f'./{YEAR}_calculations/hero_runningbacks.csv'
-HERO_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'rushCarries']
+HERO_RB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age']
 
 
 def remove_non_legendary_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -41,7 +41,7 @@ def remove_non_legendary_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
     :return: A dataframe, containing the RBs that have 'Legendary Upside'.
     """
     dataframe['trgt%'] = (dataframe['recTarg'] / ((dataframe['teamTargets'] / 17) * dataframe['games'])) * 100
-    dataframe = dataframe[dataframe['ADP'] <= 26.9]
+    dataframe = dataframe[dataframe['ADP'] <= 26]
     dataframe = dataframe[ 
         ((dataframe['trgt%'] >= 7) & (dataframe['age'] <= 22)) |
         ((dataframe['trgt%'] >= 11) & (dataframe['age'] <= 23)) |
@@ -63,7 +63,7 @@ def remove_deadzone_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     dataframe['trgt%'] = (dataframe['recTarg'] / ((dataframe['teamTargets'] / 17) * dataframe['games'])) * 100
     dataframe['evadeRate'] = (dataframe['forcedMissedTackles'] / dataframe['rushCarries']) * 100
-    dataframe = dataframe[(dataframe['ADP'] >= 27) & (dataframe['ADP'] <= 80.9)]
+    dataframe = dataframe[(dataframe['ADP'] >= 27) & (dataframe['ADP'] <= 80)]
     dataframe = dataframe[ 
         (dataframe['trgt%'] >= 12) |
         ((dataframe['rushGrade'] >= 80) & (dataframe['olRank'] <= 16)) |
@@ -76,8 +76,15 @@ def remove_deadzone_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 
 def remove_non_hero_rb_pairs(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove RBs that would not serve as good 'Hero RB' pairs (late round RBs) from a DataFrame.
+    
+    :param dataframe: A dataframe containing RB player data.
+    :return: A dataframe, containing the RBs that can be 'Hero RB' pairings.
+    """
     dataframe = dataframe[(dataframe['ADP'] >= 81) & (dataframe['ADP'] <= 120)]
-    print(dataframe)
+    dataframe = dataframe[dataframe['age'] <= 28]
+    dataframe = dataframe[dataframe['rushGrade'] >= 80]
     return dataframe
 
 
@@ -132,20 +139,17 @@ def main() -> None:
     hero_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = HERO_RB_REL_COLUMNS, low_memory = True)
 
     # Add extra datapoints necessary for Deadzone RB Calculations.
-    hero_runningback_candidates = md.add_extra_datapoints(hero_runningback_candidates, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
-    hero_runningback_candidates = md.add_extra_datapoints(hero_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
     hero_runningback_candidates = md.add_extra_datapoints(hero_runningback_candidates, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
-    hero_runningback_candidates = md.add_extra_datapoints(hero_runningback_candidates, PLAYER_RUSH_GRADES, 0, 6, 'forcedMissedTackles', base_index = 0)
     
     # Remove RBs that do not meet the criteria for Deadzone Upside.
     hero_runningback = remove_non_hero_rb_pairs(hero_runningback_candidates)
 
     # Fix Indexes.
-    # hero_runningback.reset_index(inplace=True)
-    # hero_runningback.drop('index', axis=1, inplace=True)
+    hero_runningback.reset_index(inplace=True)
+    hero_runningback.drop('index', axis=1, inplace=True)
 
     # # Push to CSV file.
-    # hero_runningback.to_csv(HERO_RB_FILE) 
+    hero_runningback.to_csv(HERO_RB_FILE) 
 
 
 if __name__ == '__main__':
