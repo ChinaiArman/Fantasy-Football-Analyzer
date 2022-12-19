@@ -5,7 +5,6 @@ A python-based application to analyze fantasy football players and project their
 
 # Imports
 import pandas as pd
-import glob
 import os
 
 import merge_dataframes as md

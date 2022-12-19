@@ -10,7 +10,6 @@ REQUIREMENTS FOR CSVS:
 
 # Imports
 import pandas as pd
-import glob
 
 
 # Constants
