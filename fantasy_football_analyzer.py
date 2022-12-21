@@ -141,6 +141,11 @@ def hero_pair_runningbacks() -> None:
 
 
 def breakout_receivers() -> None:
+    """
+    Identify Breakout WRs and create a CSV to display the result of the calculation.
+    
+    :return: None.
+    """
     breakout_receiver_candidates = pd.read_csv(COMPILED_WR_DATA, usecols = BREAKOUT_WR_REL_COLUMNS, low_memory = True)
     breakout_receivers = wra.remove_non_breakout_wr(breakout_receiver_candidates)
     breakout_receivers.reset_index(inplace=True)
