@@ -16,7 +16,7 @@ CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
 COMPILED_WR_DATA = f'./{YEAR - 1}_data/compiled_wr_data.csv'
 BREAKOUT_WR_FILE = f'./{YEAR}_calculations/breakout_receivers.csv'
 BREAKOUT_WR_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
-REC_GRADE = f'./{YEAR - 1}_data/data_player_receivinggrade.csv'
+PLAYER_REC_GRADE = f'./{YEAR - 1}_data/data_player_receivinggrade.csv'
 TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 
 
@@ -44,7 +44,7 @@ def main() -> None:
 
     # Add extra datapoints necessary for Breakout Receivers Calculations.
     breakout_receiver_candidates = md.add_extra_datapoints(breakout_receiver_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-    breakout_receiver_candidates = md.add_extra_datapoints(breakout_receiver_candidates, REC_GRADE, 0, 21, 'recGrade', base_index = 0)
+    breakout_receiver_candidates = md.add_extra_datapoints(breakout_receiver_candidates, PLAYER_REC_GRADE, 0, 21, 'recGrade', base_index = 0)
 
     # Remove RBs that do not meet the criteria for Breakout Potential.
     breakout_receivers = remove_non_breakout_wr(breakout_receiver_candidates)

@@ -24,6 +24,7 @@ TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 PLAYER_AGE = f'./{YEAR - 1}_data/data_player_age.csv'
 PLAYER_ADPS = f'./{YEAR - 1}_data/data_player_adp.csv'
 PLAYER_RUSH_GRADES = f'./{YEAR - 1}_data/data_player_rushgrade.csv'
+PLAYER_REC_GRADE = f'./{YEAR - 1}_data/data_player_receivinggrade.csv'
 
 # RB Constants
 COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
@@ -38,7 +39,7 @@ MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
 # WR Constants
 COMPILED_WR_DATA = f'./{YEAR - 1}_data/compiled_wr_data.csv'
 BREAKOUT_WR_FILE = f'./{YEAR}_calculations/breakout_receivers.csv'
-BREAKOUT_WR_REL_COLUMNS = []
+BREAKOUT_WR_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
 MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
 
 
@@ -138,12 +139,26 @@ def hero_pair_runningbacks() -> None:
     hero_runningback.to_csv(HERO_RB_FILE) 
 
 
+def breakout_receivers() -> None:
+    breakout_receiver_candidates = pd.read_csv(COMPILED_WR_DATA, usecols = BREAKOUT_WR_REL_COLUMNS, low_memory = True)
+    breakout_receiver_candidates = md.add_extra_datapoints(breakout_receiver_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
+    breakout_receiver_candidates = md.add_extra_datapoints(breakout_receiver_candidates, PLAYER_REC_GRADE, 0, 21, 'recGrade', base_index = 0)
+    breakout_receivers = wra.remove_non_breakout_wr(breakout_receiver_candidates)
+    breakout_receivers.reset_index(inplace=True)
+    breakout_receivers.drop('index', axis=1, inplace=True)
+    if not os.path.exists(CALCULATIONS_FOLDER):
+        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
+        os.makedirs(final_directory)
+    breakout_receivers.to_csv(BREAKOUT_WR_FILE)
+
+
 def main() -> None:
     create_rb_csv()
     create_wr_csv()
     legendary_runningbacks()
     deadzone_runningbacks()
     hero_pair_runningbacks()
+    breakout_receivers()
 
 
 if __name__ == '__main__':
