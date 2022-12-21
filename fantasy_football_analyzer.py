@@ -28,6 +28,7 @@ PLAYER_REC_GRADE = f'./{YEAR - 1}_data/data_player_receivinggrade.csv'
 
 # RB Constants
 COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
+NECESSARY_RB_COLUMNS = ['player', 'team', 'games', 'recTarg', 'rushCarries']
 LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
 LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'olRank', 'teamTargets']
 DEADZONE_RB_FILE = f'./{YEAR}_calculations/deadzone_runningbacks.csv'
@@ -38,6 +39,7 @@ MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
 
 # WR Constants
 COMPILED_WR_DATA = f'./{YEAR - 1}_data/compiled_wr_data.csv'
+NECESSARY_WR_COLUMNS = ['player', 'team', 'games', 'recTarg']
 BREAKOUT_WR_FILE = f'./{YEAR}_calculations/breakout_receivers.csv'
 BREAKOUT_WR_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'teamTargets', 'recGrade']
 MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
@@ -57,7 +59,7 @@ def create_rb_csv() -> None:
     :return: None.
     """
     if not os.path.exists(COMPILED_RB_DATA):
-        primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
+        primary_dataframe = pd.read_csv(MAIN_RB_CSV, usecols = NECESSARY_RB_COLUMNS).sort_values('player')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
@@ -78,7 +80,7 @@ def create_wr_csv() -> None:
     :return: None.
     """
     if not os.path.exists(COMPILED_WR_DATA):
-        primary_dataframe = pd.read_csv(MAIN_WR_CSV).sort_values('player')
+        primary_dataframe = pd.read_csv(MAIN_WR_CSV, usecols = NECESSARY_WR_COLUMNS).sort_values('player')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
