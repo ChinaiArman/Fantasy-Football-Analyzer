@@ -47,6 +47,7 @@ MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
 
 # QB Constants
 COMPILED_QB_DATA = f'./{YEAR - 1}_data/compiled_qb_data.csv'
+NECESSARY_QB_COLUMNS = []
 MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
 BREAKOUT_QB_REL_COLUMNS = []
 MAIN_QB_CSV = f'./{YEAR - 1}_data/data_qb_stats.csv'
@@ -92,73 +93,40 @@ def create_wr_csv() -> None:
         primary_dataframe.to_csv(COMPILED_WR_DATA)
 
 
-def legendary_runningbacks() -> None:
+def create_analytical_function(stat_file: str, rel_columns: list, file_name: str, analyzer):
     """
-    Identify RBs with 'Legendary Upside' and create a CSV to display the result of the calculation.
     
-    :return: None.
     """
-    legendary_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = LEGENDARY_RB_REL_COLUMNS, low_memory = True)
-    legendary_runningbacks = rba.remove_non_legendary_rbs(legendary_runningback_candidates)
-    legendary_runningbacks.reset_index(inplace=True)
-    legendary_runningbacks.drop('index', axis=1, inplace=True)
-    if not os.path.exists(CALCULATIONS_FOLDER):
-        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
-        os.makedirs(final_directory)
-    legendary_runningbacks.to_csv(LEGENDARY_RB_FILE)
-
-
-def deadzone_runningbacks() -> None:
-    """
-    Identify RBs with 'Deadzone Upside' and create a CSV to display the result of the calculation.
-    
-    :return: None.
-    """
-    deadzone_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = DEADZONE_RB_REL_COLUMNS, low_memory = True)
-    deadzone_runningback = rba.remove_deadzone_rbs(deadzone_runningback_candidates)
-    deadzone_runningback.reset_index(inplace=True)
-    deadzone_runningback.drop('index', axis=1, inplace=True)
-    if not os.path.exists(CALCULATIONS_FOLDER):
-        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
-        os.makedirs(final_directory)
-    deadzone_runningback.to_csv(DEADZONE_RB_FILE)
-
-
-def hero_pair_runningbacks() -> None:
-    """
-    Identify Hero RB pairs and create a CSV to display the result of the calculation.
-    
-    :return: None.
-    """
-    hero_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = HERO_RB_REL_COLUMNS, low_memory = True)
-    hero_runningback = rba.remove_non_hero_rb_pairs(hero_runningback_candidates)
-    hero_runningback.reset_index(inplace=True)
-    hero_runningback.drop('index', axis=1, inplace=True)
-    if not os.path.exists(CALCULATIONS_FOLDER):
-        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
-        os.makedirs(final_directory)
-    hero_runningback.to_csv(HERO_RB_FILE) 
-
-
-def breakout_receivers() -> None:
-    """
-    Identify Breakout WRs and create a CSV to display the result of the calculation.
-    
-    :return: None.
-    """
-    breakout_receiver_candidates = pd.read_csv(COMPILED_WR_DATA, usecols = BREAKOUT_WR_REL_COLUMNS, low_memory = True)
-    breakout_receivers = wra.remove_non_breakout_wr(breakout_receiver_candidates)
-    breakout_receivers.reset_index(inplace=True)
-    breakout_receivers.drop('index', axis=1, inplace=True)
-    if not os.path.exists(CALCULATIONS_FOLDER):
-        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
-        os.makedirs(final_directory)
-    breakout_receivers.to_csv(BREAKOUT_WR_FILE)
+    def analysis() -> None:
+        """
+        
+        """
+        player_candidates = pd.read_csv(stat_file, usecols = rel_columns, low_memory = True)
+        qualified_players = analyzer(player_candidates)
+        qualified_players.reset_index(inplace=True)
+        qualified_players.drop('index', axis=1, inplace=True)
+        if not os.path.exists(CALCULATIONS_FOLDER):
+            final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
+            os.makedirs(final_directory)
+        qualified_players.to_csv(file_name)
+    return analysis
 
 
 def main() -> None:
+    """
+    Execute the program.
+    """
+    # Create Compiled Data CSVs
     create_rb_csv()
     create_wr_csv()
+
+    # Create player analysis functions.
+    legendary_runningbacks = create_analytical_function(COMPILED_RB_DATA, LEGENDARY_RB_REL_COLUMNS, LEGENDARY_RB_FILE, rba.remove_non_legendary_rbs)
+    deadzone_runningbacks = create_analytical_function(COMPILED_RB_DATA, DEADZONE_RB_REL_COLUMNS, DEADZONE_RB_FILE, rba.remove_deadzone_rbs)
+    hero_pair_runningbacks = create_analytical_function(COMPILED_RB_DATA, HERO_RB_REL_COLUMNS, HERO_RB_FILE, rba.remove_non_hero_rb_pairs)
+    breakout_receivers = create_analytical_function(COMPILED_WR_DATA, BREAKOUT_WR_REL_COLUMNS, BREAKOUT_WR_FILE, wra.remove_non_breakout_wr)
+
+    # Execute player analysis functions.
     legendary_runningbacks()
     deadzone_runningbacks()
     hero_pair_runningbacks()
