@@ -14,6 +14,10 @@ import pandas as pd
 
 # Constants
 YEAR = 2022
+NECESSARY_RB_COLUMNS = ['player', 'team', 'games', 'recTarg', 'rushCarries']
+TEAM_OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
+TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
+PLAYER_RUSH_GRADES = f'./{YEAR - 1}_data/data_player_rushgrade.csv'
 PLAYER_AGE = f'./{YEAR - 1}_data/data_player_age.csv'
 PLAYER_ADPS = f'./{YEAR - 1}_data/data_player_adp.csv'
 MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
@@ -58,13 +62,15 @@ def main() -> None:
     Execute the program.
     """
     # Create primary DataFrame.
-    primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
+    primary_dataframe = pd.read_csv(MAIN_RB_CSV, usecols = NECESSARY_RB_COLUMNS).sort_values('player')
 
-    # Add extra column (ADP).
-    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 11, 'ADP')
-
-    # Add extra column (age).
+    # Add extra columns.
+    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
     primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
+    primary_dataframe = add_extra_datapoints(primary_dataframe, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
+    primary_dataframe = add_extra_datapoints(primary_dataframe, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
+    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
+    primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_RUSH_GRADES, 0, 6, 'forcedMissedTackles', base_index = 0)
 
     # Sort by ADP.
     primary_dataframe = primary_dataframe.sort_values('ADP')
