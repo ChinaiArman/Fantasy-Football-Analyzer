@@ -29,17 +29,17 @@ PLAYER_REC_GRADE = f'./{YEAR - 1}_data/data_player_receivinggrade.csv'
 # RB Constants
 COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
 LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
-LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
+LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'olRank', 'teamTargets']
 DEADZONE_RB_FILE = f'./{YEAR}_calculations/deadzone_runningbacks.csv'
-DEADZONE_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'rushCarries']
+DEADZONE_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'rushCarries', 'olRank', 'teamTargets', 'rushGrade', 'forcedMissedTackles']
 HERO_RB_FILE = f'./{YEAR}_calculations/hero_runningbacks.csv'
-HERO_RB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age']
+HERO_RB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushGrade']
 MAIN_RB_CSV = f'./{YEAR - 1}_data/data_rb_stats.csv'
 
 # WR Constants
 COMPILED_WR_DATA = f'./{YEAR - 1}_data/compiled_wr_data.csv'
 BREAKOUT_WR_FILE = f'./{YEAR}_calculations/breakout_receivers.csv'
-BREAKOUT_WR_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
+BREAKOUT_WR_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'teamTargets', 'recGrade']
 MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
 
 
@@ -60,6 +60,10 @@ def create_rb_csv() -> None:
         primary_dataframe = pd.read_csv(MAIN_RB_CSV).sort_values('player')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_RUSH_GRADES, 0, 6, 'forcedMissedTackles', base_index = 0)
         primary_dataframe = primary_dataframe.sort_values('ADP')
         primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
         primary_dataframe.reset_index(inplace=True)
@@ -77,6 +81,8 @@ def create_wr_csv() -> None:
         primary_dataframe = pd.read_csv(MAIN_WR_CSV).sort_values('player')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_REC_GRADE, 0, 21, 'recGrade', base_index = 0)
         primary_dataframe = primary_dataframe.sort_values('ADP')
         primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
         primary_dataframe.reset_index(inplace=True)
@@ -91,8 +97,6 @@ def legendary_runningbacks() -> None:
     :return: None.
     """
     legendary_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = LEGENDARY_RB_REL_COLUMNS, low_memory = True)
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
     legendary_runningbacks = rba.remove_non_legendary_rbs(legendary_runningback_candidates)
     legendary_runningbacks.reset_index(inplace=True)
     legendary_runningbacks.drop('index', axis=1, inplace=True)
@@ -109,10 +113,6 @@ def deadzone_runningbacks() -> None:
     :return: None.
     """
     deadzone_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = DEADZONE_RB_REL_COLUMNS, low_memory = True)
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, PLAYER_RUSH_GRADES, 0, 6, 'forcedMissedTackles', base_index = 0)
     deadzone_runningback = rba.remove_deadzone_rbs(deadzone_runningback_candidates)
     deadzone_runningback.reset_index(inplace=True)
     deadzone_runningback.drop('index', axis=1, inplace=True)
@@ -129,7 +129,6 @@ def hero_pair_runningbacks() -> None:
     :return: None.
     """
     hero_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = HERO_RB_REL_COLUMNS, low_memory = True)
-    hero_runningback_candidates = md.add_extra_datapoints(hero_runningback_candidates, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
     hero_runningback = rba.remove_non_hero_rb_pairs(hero_runningback_candidates)
     hero_runningback.reset_index(inplace=True)
     hero_runningback.drop('index', axis=1, inplace=True)
@@ -141,8 +140,6 @@ def hero_pair_runningbacks() -> None:
 
 def breakout_receivers() -> None:
     breakout_receiver_candidates = pd.read_csv(COMPILED_WR_DATA, usecols = BREAKOUT_WR_REL_COLUMNS, low_memory = True)
-    breakout_receiver_candidates = md.add_extra_datapoints(breakout_receiver_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-    breakout_receiver_candidates = md.add_extra_datapoints(breakout_receiver_candidates, PLAYER_REC_GRADE, 0, 21, 'recGrade', base_index = 0)
     breakout_receivers = wra.remove_non_breakout_wr(breakout_receiver_candidates)
     breakout_receivers.reset_index(inplace=True)
     breakout_receivers.drop('index', axis=1, inplace=True)

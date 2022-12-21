@@ -22,15 +22,15 @@ PLAYER_RUSH_GRADES = f'./{YEAR - 1}_data/data_player_rushgrade.csv'
 
 # Legendary RBs
 LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
-LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age']
+LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'olRank', 'teamTargets']
 
 # Deadzone RBs
 DEADZONE_RB_FILE = f'./{YEAR}_calculations/deadzone_runningbacks.csv'
-DEADZONE_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'rushCarries']
+DEADZONE_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'rushCarries', 'olRank', 'teamTargets', 'rushGrade', 'forcedMissedTackles']
 
 # Hero RB Pairs
 HERO_RB_FILE = f'./{YEAR}_calculations/hero_runningbacks.csv'
-HERO_RB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age']
+HERO_RB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushGrade']
 
 
 def remove_non_legendary_rbs(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -98,10 +98,6 @@ def main() -> None:
     # Read the relevant columns from the RB Data and store as a Pandas DataFrame.
     legendary_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = LEGENDARY_RB_REL_COLUMNS, low_memory = True)
 
-    # Add extra datapoints necessary for Legendary RB Calculations.
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
-    legendary_runningback_candidates = md.add_extra_datapoints(legendary_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-
     # Remove RBs that do not meet the criteria for Legendary Upside.
     legendary_runningbacks = remove_non_legendary_rbs(legendary_runningback_candidates)
 
@@ -120,12 +116,6 @@ def main() -> None:
     # Read the relevant columns from the RB Data and store as a Pandas DataFrame.
     deadzone_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = DEADZONE_RB_REL_COLUMNS, low_memory = True)
 
-    # Add extra datapoints necessary for Deadzone RB Calculations.
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
-    deadzone_runningback_candidates = md.add_extra_datapoints(deadzone_runningback_candidates, PLAYER_RUSH_GRADES, 0, 6, 'forcedMissedTackles', base_index = 0)
-    
     # Remove RBs that do not meet the criteria for Deadzone Upside.
     deadzone_runningback = remove_deadzone_rbs(deadzone_runningback_candidates)
 
@@ -139,9 +129,6 @@ def main() -> None:
     # HERO RUNNINGBACK PAIRS
     # Read the relevant columns from the RB Data and store as a Pandas DataFrame.
     hero_runningback_candidates = pd.read_csv(COMPILED_RB_DATA, usecols = HERO_RB_REL_COLUMNS, low_memory = True)
-
-    # Add extra datapoints necessary for Deadzone RB Calculations.
-    hero_runningback_candidates = md.add_extra_datapoints(hero_runningback_candidates, PLAYER_RUSH_GRADES, 0, 28, 'rushGrade', base_index = 0)
     
     # Remove RBs that do not meet the criteria for Deadzone Upside.
     hero_runningback = remove_non_hero_rb_pairs(hero_runningback_candidates)
