@@ -62,7 +62,7 @@ def main() -> None:
     Execute the program.
     """
     # Create primary DataFrame.
-    primary_dataframe = pd.read_csv(MAIN_RB_CSV, usecols = NECESSARY_RB_COLUMNS).sort_values('player')
+    primary_dataframe = pd.read_csv(MAIN_RB_CSV, usecols = NECESSARY_RB_COLUMNS)
 
     # Add extra columns.
     primary_dataframe = add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
