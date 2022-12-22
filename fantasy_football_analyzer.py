@@ -47,9 +47,9 @@ MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
 
 # QB Constants
 COMPILED_QB_DATA = f'./{YEAR - 1}_data/compiled_qb_data.csv'
-NECESSARY_QB_COLUMNS = []
+NECESSARY_QB_COLUMNS = ['player', 'team', 'games']
 MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
-BREAKOUT_QB_REL_COLUMNS = []
+MUST_DRAFT_QB_REL_COLUMNS = []
 MAIN_QB_CSV = f'./{YEAR - 1}_data/data_qb_stats.csv'
 
 
@@ -60,7 +60,7 @@ def create_rb_csv() -> None:
     :return: None.
     """
     if not os.path.exists(COMPILED_RB_DATA):
-        primary_dataframe = pd.read_csv(MAIN_RB_CSV, usecols = NECESSARY_RB_COLUMNS).sort_values('player')
+        primary_dataframe = pd.read_csv(MAIN_RB_CSV, usecols = NECESSARY_RB_COLUMNS)
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
@@ -81,7 +81,7 @@ def create_wr_csv() -> None:
     :return: None.
     """
     if not os.path.exists(COMPILED_WR_DATA):
-        primary_dataframe = pd.read_csv(MAIN_WR_CSV, usecols = NECESSARY_WR_COLUMNS).sort_values('player')
+        primary_dataframe = pd.read_csv(MAIN_WR_CSV, usecols = NECESSARY_WR_COLUMNS)
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
         primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_TARGETS, 0, 7, 'teamTargets', base_index = 1)
@@ -91,6 +91,23 @@ def create_wr_csv() -> None:
         primary_dataframe.reset_index(inplace=True)
         primary_dataframe.drop('index', axis=1, inplace=True)
         primary_dataframe.to_csv(COMPILED_WR_DATA)
+
+    
+def create_qb_csv() -> None:
+    """
+    Create a containing all the WR data for WRs with an ADP.
+
+    :return: None.
+    """
+    if not os.path.exists(COMPILED_QB_DATA):
+        primary_dataframe = pd.read_csv(MAIN_QB_CSV, usecols = NECESSARY_QB_COLUMNS)
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
+        primary_dataframe = primary_dataframe.sort_values('ADP')
+        primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
+        primary_dataframe.reset_index(inplace=True)
+        primary_dataframe.drop('index', axis=1, inplace=True)
+        primary_dataframe.to_csv(COMPILED_QB_DATA)
 
 
 def create_analytical_function(stat_file: str, rel_columns: list, file_name: str, analyzer):
@@ -125,6 +142,7 @@ def main() -> None:
     # Create Compiled Data CSVs
     create_rb_csv()
     create_wr_csv()
+    create_qb_csv()
 
     # Create player analysis functions.
     legendary_runningbacks = create_analytical_function(COMPILED_RB_DATA, LEGENDARY_RB_REL_COLUMNS, LEGENDARY_RB_FILE, rba.remove_non_legendary_rbs)
