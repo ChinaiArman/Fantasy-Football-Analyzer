@@ -95,11 +95,17 @@ def create_wr_csv() -> None:
 
 def create_analytical_function(stat_file: str, rel_columns: list, file_name: str, analyzer):
     """
-    
+    Create a function that generates a filtered CSV from using conditions.
+
+    :param stat_file: A string containing the name of a file used to gather initial statistics from.
+    :param rel_columns: A list containing strings representing the names of columns to use from the CSV.
+    :param file_name: The name of the file to push the filtered CSV to.
+    :param analyzer: The name of a function to apply on the DataFrame, which will filter the original CSV and created a parsed DataFrame.
+    :return: A function.
     """
     def analysis() -> None:
         """
-        
+        Turn a CSV into a DataFrame, analyze it, and create a new CSV containing rows that only meet specific conditions.
         """
         player_candidates = pd.read_csv(stat_file, usecols = rel_columns, low_memory = True)
         qualified_players = analyzer(player_candidates)
