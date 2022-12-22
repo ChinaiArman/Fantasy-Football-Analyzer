@@ -95,7 +95,7 @@ def create_wr_csv() -> None:
     
 def create_qb_csv() -> None:
     """
-    Create a containing all the WR data for WRs with an ADP.
+    Create a containing all the QB data for QBs with an ADP.
 
     :return: None.
     """
