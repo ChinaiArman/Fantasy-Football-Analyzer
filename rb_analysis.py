@@ -15,11 +15,6 @@ YEAR = 2022
 CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
 COMPILED_RB_DATA = f'./{YEAR - 1}_data/compiled_rb_data.csv'
 
-# Extra Datapoints
-TEAM_OL_RANK = f'./{YEAR - 1}_data/data_team_olrank.csv'
-TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
-PLAYER_RUSH_GRADES = f'./{YEAR - 1}_data/data_player_rushgrade.csv'
-
 # Legendary RBs
 LEGENDARY_RB_FILE = f'./{YEAR}_calculations/legendary_runningbacks.csv'
 LEGENDARY_RB_REL_COLUMNS = ['player', 'team', 'games', 'recTarg', 'ADP', 'age', 'olRank', 'teamTargets']
