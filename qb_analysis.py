@@ -18,6 +18,10 @@ MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
 MUST_DRAFT_QB_REL_COLUMNS = []
 
 
+def remove_non_breakout_qbs():
+    pass
+
+
 def main():
     pass
 
