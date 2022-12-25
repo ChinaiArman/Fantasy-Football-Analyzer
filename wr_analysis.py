@@ -40,7 +40,7 @@ def main() -> None:
     # Read the relevant columns from the WR Data and store as a Pandas DataFrame.
     breakout_receiver_candidates = pd.read_csv(COMPILED_WR_DATA, usecols = BREAKOUT_WR_REL_COLUMNS, low_memory = True)
 
-    # Remove RBs that do not meet the criteria for Breakout Potential.
+    # Remove WRs that do not meet the criteria for Breakout Potential.
     breakout_receivers = remove_non_breakout_wr(breakout_receiver_candidates)
 
     # Fix Indexes.
