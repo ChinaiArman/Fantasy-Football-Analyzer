@@ -47,7 +47,7 @@ MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
 
 # QB Constants
 COMPILED_QB_DATA = f'./{YEAR - 1}_data/compiled_qb_data.csv'
-NECESSARY_QB_COLUMNS = ['player', 'team', 'games']
+NECESSARY_QB_COLUMNS = ['player', 'team', 'games', 'rushCarries']
 MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
 MUST_DRAFT_QB_REL_COLUMNS = []
 MAIN_QB_CSV = f'./{YEAR - 1}_data/data_qb_stats.csv'
