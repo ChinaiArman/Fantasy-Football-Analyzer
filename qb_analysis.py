@@ -15,10 +15,12 @@ YEAR = 2022
 CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
 COMPILED_QB_DATA = f'./{YEAR - 1}_data/compiled_qb_data.csv'
 MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
-MUST_DRAFT_QB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age']
+MUST_DRAFT_QB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushCarries', 'depthAim', 'olRank']
 
 
 def remove_non_breakout_qbs(dataframe: pd.DataFrame) -> pd.DataFrame:
+    dataframe['rushPerGame'] = (dataframe['rushCarries'] / dataframe['games'])
+    dataframe = dataframe[dataframe['rushPerGame'] >= 5]
     return dataframe
 
 
