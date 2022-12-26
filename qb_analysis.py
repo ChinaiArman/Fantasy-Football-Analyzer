@@ -20,7 +20,10 @@ MUST_DRAFT_QB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushCarri
 
 def remove_non_breakout_qbs(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe['rushPerGame'] = (dataframe['rushCarries'] / dataframe['games'])
-    dataframe = dataframe[dataframe['rushPerGame'] >= 5]
+    dataframe = dataframe[
+        ((dataframe['rushPerGame'] >= 5) & (dataframe['depthAim'] >= 9.0)) |
+        (dataframe['olRank'] <= 10)
+        ]
     return dataframe
 
 
