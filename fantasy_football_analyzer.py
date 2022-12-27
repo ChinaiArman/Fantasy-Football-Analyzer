@@ -54,6 +54,9 @@ MUST_DRAFT_QB_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
 MUST_DRAFT_QB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushCarries', 'depthAim', 'olRank', 'offenseGrade']
 MAIN_QB_CSV = f'./{YEAR - 1}_data/data_qb_stats.csv'
 
+# Breakout Players
+ALL_BREAKOUT_PLAYER_FILE = f'./{YEAR}_calculations/all_breakout_players.csv'
+
 
 def create_rb_csv() -> None:
     """
@@ -139,6 +142,23 @@ def create_analytical_function(stat_file: str, rel_columns: list, file_name: str
     return analysis
 
 
+def all_breakout_players():
+    legendary_rbs = pd.read_csv(LEGENDARY_RB_FILE)
+    deadzone_rbs = pd.read_csv(DEADZONE_RB_FILE)
+    hero_rbs = pd.read_csv(HERO_RB_FILE)
+    breakout_wr = pd.read_csv(BREAKOUT_WR_FILE)
+    must_draft_qbs = pd.read_csv(MUST_DRAFT_QB_FILE)
+    breakout_player_dataframe = pd.concat([legendary_rbs, deadzone_rbs, hero_rbs, breakout_wr, must_draft_qbs])
+    breakout_player_dataframe.reset_index(inplace=True)
+    breakout_player_dataframe.drop('Unnamed: 0', axis=1, inplace=True)
+    breakout_player_dataframe.drop('index', axis=1, inplace=True)
+    breakout_player_dataframe = breakout_player_dataframe.sort_values('ADP')
+    if not os.path.exists(CALCULATIONS_FOLDER):
+        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
+        os.makedirs(final_directory)
+    breakout_player_dataframe.to_csv(ALL_BREAKOUT_PLAYER_FILE)
+
+
 def main() -> None:
     """
     Execute the program.
@@ -161,6 +181,10 @@ def main() -> None:
     hero_pair_runningbacks()
     breakout_receivers()
     must_draft_quarterbacks()
+
+    # Create master CSV.
+    all_breakout_players()
+    
 
 
 if __name__ == '__main__':
