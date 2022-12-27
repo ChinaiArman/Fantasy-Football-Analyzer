@@ -154,13 +154,10 @@ def all_breakout_players() -> None:
     breakout_wr = pd.read_csv(BREAKOUT_WR_FILE)
     must_draft_qbs = pd.read_csv(MUST_DRAFT_QB_FILE)
     breakout_player_dataframe = pd.concat([legendary_rbs, deadzone_rbs, hero_rbs, breakout_wr, must_draft_qbs])
-    breakout_player_dataframe.reset_index(inplace=True)
-    breakout_player_dataframe.drop('Unnamed: 0', axis=1, inplace=True)
-    breakout_player_dataframe.drop('index', axis=1, inplace=True)
     breakout_player_dataframe = breakout_player_dataframe.sort_values('ADP')
-    if not os.path.exists(CALCULATIONS_FOLDER):
-        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
-        os.makedirs(final_directory)
+    breakout_player_dataframe.drop('Unnamed: 0', axis=1, inplace=True)
+    breakout_player_dataframe.reset_index(inplace=True)
+    breakout_player_dataframe.drop('index', axis=1, inplace=True)
     breakout_player_dataframe.to_csv(ALL_BREAKOUT_PLAYER_FILE)
 
 
