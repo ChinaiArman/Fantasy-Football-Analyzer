@@ -23,6 +23,7 @@ TEAM_TARGETS = f'./{YEAR - 1}_data/data_team_trgt%.csv'
 # Player Constants
 PLAYER_AGE = f'./{YEAR - 1}_data/data_player_age.csv'
 PLAYER_ADPS = f'./{YEAR - 1}_data/data_player_adp.csv'
+PLAYER_PASS_GRADE = f'./{YEAR - 1}_data/data_player_passgrade.csv'
 PLAYER_RUSH_GRADES = f'./{YEAR - 1}_data/data_player_rushgrade.csv'
 PLAYER_REC_GRADE = f'./{YEAR - 1}_data/data_player_receivinggrade.csv'
 
@@ -103,6 +104,8 @@ def create_qb_csv() -> None:
     primary_dataframe = pd.read_csv(MAIN_QB_CSV, usecols = NECESSARY_QB_COLUMNS)
     primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
     primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
+    primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_PASS_GRADE, 0, 23, 'offenseGrade')
+    primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_PASS_GRADE, 0, 24, 'passGrade')
     primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
     primary_dataframe = primary_dataframe.sort_values('ADP')
     primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
