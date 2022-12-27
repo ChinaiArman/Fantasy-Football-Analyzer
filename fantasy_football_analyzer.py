@@ -142,7 +142,12 @@ def create_analytical_function(stat_file: str, rel_columns: list, file_name: str
     return analysis
 
 
-def all_breakout_players():
+def all_breakout_players() -> None:
+    """
+    Create a CSV with all of the breakout players found from the analysis. 
+
+    :return: None.
+    """
     legendary_rbs = pd.read_csv(LEGENDARY_RB_FILE)
     deadzone_rbs = pd.read_csv(DEADZONE_RB_FILE)
     hero_rbs = pd.read_csv(HERO_RB_FILE)
