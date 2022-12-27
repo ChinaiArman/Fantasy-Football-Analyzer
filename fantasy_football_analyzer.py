@@ -153,6 +153,11 @@ def all_breakout_players() -> None:
     hero_rbs = pd.read_csv(HERO_RB_FILE)
     breakout_wr = pd.read_csv(BREAKOUT_WR_FILE)
     must_draft_qbs = pd.read_csv(MUST_DRAFT_QB_FILE)
+    legendary_rbs['Position'] = ['RB' for _ in range(len(legendary_rbs.index))]
+    deadzone_rbs['Position'] = ['RB' for _ in range(len(deadzone_rbs.index))]
+    hero_rbs['Position'] = ['RB' for _ in range(len(hero_rbs.index))]
+    breakout_wr['Position'] = ['WR' for _ in range(len(breakout_wr.index))]
+    must_draft_qbs['Position'] = ['QB' for _ in range(len(must_draft_qbs.index))]
     breakout_player_dataframe = pd.concat([legendary_rbs, deadzone_rbs, hero_rbs, breakout_wr, must_draft_qbs])
     breakout_player_dataframe = breakout_player_dataframe.sort_values('ADP')
     breakout_player_dataframe.drop('Unnamed: 0', axis=1, inplace=True)

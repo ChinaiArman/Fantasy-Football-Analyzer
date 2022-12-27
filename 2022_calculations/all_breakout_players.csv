@@ -1,29 +1,29 @@
-,player,team,ADP,age
-0,Christian McCaffrey,CAR,2.0,26.0
-1,Alvin Kamara,NO,10.0,27.0
-2,D'Andre Swift,DET,15.0,23.0
-3,Josh Allen,BUF,22.0,26.0
-4,Javonte Williams,DEN,23.0,22.0
-5,Saquon Barkley,NYG,26.0,25.0
-6,Nick Chubb,CLV,28.0,26.0
-7,Patrick Mahomes II,KC,29.0,27.0
-8,Tee Higgins,CIN,30.0,23.0
-9,Michael Pittman Jr.,IND,31.0,25.0
-10,A.J. Brown,PHI,34.0,25.0
-11,Justin Herbert,LAC,36.0,24.0
-12,David Montgomery,CHI,40.0,25.0
-13,Lamar Jackson,BLT,42.0,25.0
-14,Jaylen Waddle,MIA,44.0,24.0
-15,Josh Jacobs,LV,54.0,24.0
-16,Jalen Hurts,PHI,56.0,24.0
-17,Amon-Ra St. Brown,DET,58.0,23.0
-18,Joe Burrow,CIN,74.0,26.0
-19,Miles Sanders,PHI,76.0,25.0
-20,DeVonta Smith,PHI,85.0,24.0
-21,Damien Harris,NE,89.0,25.0
-22,Rhamondre Stevenson,NE,93.0,24.0
-23,Tony Pollard,DAL,95.0,25.0
-24,A.J. Dillon,GB,97.0,24.0
-25,Trey Lance,SF,104.0,22.0
-26,Rashaad Penny,SEA,106.0,26.0
-27,Justin Fields,CHI,149.0,23.0
+,player,team,ADP,age,Position
+0,Christian McCaffrey,CAR,2.0,26.0,RB
+1,Alvin Kamara,NO,10.0,27.0,RB
+2,D'Andre Swift,DET,15.0,23.0,RB
+3,Josh Allen,BUF,22.0,26.0,QB
+4,Javonte Williams,DEN,23.0,22.0,RB
+5,Saquon Barkley,NYG,26.0,25.0,RB
+6,Nick Chubb,CLV,28.0,26.0,RB
+7,Patrick Mahomes II,KC,29.0,27.0,QB
+8,Tee Higgins,CIN,30.0,23.0,WR
+9,Michael Pittman Jr.,IND,31.0,25.0,WR
+10,A.J. Brown,PHI,34.0,25.0,WR
+11,Justin Herbert,LAC,36.0,24.0,QB
+12,David Montgomery,CHI,40.0,25.0,RB
+13,Lamar Jackson,BLT,42.0,25.0,QB
+14,Jaylen Waddle,MIA,44.0,24.0,WR
+15,Josh Jacobs,LV,54.0,24.0,RB
+16,Jalen Hurts,PHI,56.0,24.0,QB
+17,Amon-Ra St. Brown,DET,58.0,23.0,WR
+18,Joe Burrow,CIN,74.0,26.0,QB
+19,Miles Sanders,PHI,76.0,25.0,RB
+20,DeVonta Smith,PHI,85.0,24.0,WR
+21,Damien Harris,NE,89.0,25.0,RB
+22,Rhamondre Stevenson,NE,93.0,24.0,RB
+23,Tony Pollard,DAL,95.0,25.0,RB
+24,A.J. Dillon,GB,97.0,24.0,RB
+25,Trey Lance,SF,104.0,22.0,QB
+26,Rashaad Penny,SEA,106.0,26.0,RB
+27,Justin Fields,CHI,149.0,23.0,QB
