@@ -14,7 +14,7 @@ import merge_dataframes as md
 YEAR = 2022
 CALCULATIONS_FOLDER = f'./{YEAR}_calculations'
 COMPILED_QB_DATA = f'./{YEAR - 1}_data/compiled_qb_data.csv'
-MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
+MUST_DRAFT_QB_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
 MUST_DRAFT_QB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushCarries', 'depthAim', 'olRank', 'offenseGrade']
 
 
@@ -24,6 +24,8 @@ def remove_non_breakout_qbs(dataframe: pd.DataFrame) -> pd.DataFrame:
         ((dataframe['rushPerGame'] >= 5) & (dataframe['depthAim'] >= 9.0)) |
         ((dataframe['age'] <= 30) & (dataframe['offenseGrade'] >= 90))
         ]
+    removable_elements = [element for element in dataframe.columns if element not in ['player', 'team', 'age', 'ADP']]
+    dataframe = dataframe.drop((element for element in removable_elements), axis=1)
     return dataframe
 
 
@@ -38,7 +40,12 @@ def main():
     # Fix Indexes.
     must_draft_qbs.reset_index(inplace=True)
     must_draft_qbs.drop('index', axis=1, inplace=True)
-    print(must_draft_qbs)
+    
+    # Push to CSV file.
+    if not os.path.exists(CALCULATIONS_FOLDER):
+        final_directory = os.path.join(os.getcwd(), CALCULATIONS_FOLDER)
+        os.makedirs(final_directory)
+    must_draft_qbs.to_csv(MUST_DRAFT_QB_FILE)
 
 
 if __name__ == '__main__':
