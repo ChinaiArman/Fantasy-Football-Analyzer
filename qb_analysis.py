@@ -36,7 +36,7 @@ def remove_non_breakout_qbs(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def main():
+def main() -> None:
     # MUST DRAFT QBs
     # Read the relevant columns from the QB Data and store as a Pandas DataFrame.
     must_draft_qb_candidates = pd.read_csv(COMPILED_QB_DATA, usecols = MUST_DRAFT_QB_REL_COLUMNS, low_memory = True)
