@@ -1,5 +1,5 @@
 """
-A python module with functions designed to identify RBs with legendary upside.
+A python module with functions designed to identify QBs that are likely to serve as QB1s for the upcoming season.
 """
 
 
@@ -19,10 +19,17 @@ MUST_DRAFT_QB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushCarri
 
 
 def remove_non_breakout_qbs(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove QBs that are unlikely to serve as a QB1/ have good ROI for the upcoming season.
+    
+    :param dataframe: A dataframe containing QB player data.
+    :return: A dataframe, containing the QBs that will have good ROI.
+    """
     dataframe['rushPerGame'] = (dataframe['rushCarries'] / dataframe['games'])
     dataframe = dataframe[
         ((dataframe['rushPerGame'] >= 5) & (dataframe['depthAim'] >= 9.0)) |
-        ((dataframe['age'] <= 30) & (dataframe['offenseGrade'] >= 90))
+        ((dataframe['age'] <= 30) & (dataframe['offenseGrade'] >= 90)) |
+        ((dataframe['ADP'] <= 30))
         ]
     removable_elements = [element for element in dataframe.columns if element not in ['player', 'team', 'age', 'ADP']]
     dataframe = dataframe.drop((element for element in removable_elements), axis=1)
