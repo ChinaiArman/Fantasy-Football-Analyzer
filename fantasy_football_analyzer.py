@@ -10,6 +10,7 @@ import os
 import merge_dataframes as md
 import rb_analysis as rba
 import wr_analysis as wra
+import qb_analysis as qba
 
 
 # Year Constants
@@ -49,8 +50,8 @@ MAIN_WR_CSV = f'./{YEAR - 1}_data/data_wr_stats.csv'
 # QB Constants
 COMPILED_QB_DATA = f'./{YEAR - 1}_data/compiled_qb_data.csv'
 NECESSARY_QB_COLUMNS = ['player', 'team', 'games', 'rushCarries', 'depthAim']
-MUST_DRAFT_QBS_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
-MUST_DRAFT_QB_REL_COLUMNS = []
+MUST_DRAFT_QB_FILE = f'./{YEAR}_calculations/must_draft_quarterbacks.csv'
+MUST_DRAFT_QB_REL_COLUMNS = ['player', 'team', 'games', 'ADP', 'age', 'rushCarries', 'depthAim', 'olRank', 'offenseGrade']
 MAIN_QB_CSV = f'./{YEAR - 1}_data/data_qb_stats.csv'
 
 
@@ -152,12 +153,14 @@ def main() -> None:
     deadzone_runningbacks = create_analytical_function(COMPILED_RB_DATA, DEADZONE_RB_REL_COLUMNS, DEADZONE_RB_FILE, rba.remove_deadzone_rbs)
     hero_pair_runningbacks = create_analytical_function(COMPILED_RB_DATA, HERO_RB_REL_COLUMNS, HERO_RB_FILE, rba.remove_non_hero_rb_pairs)
     breakout_receivers = create_analytical_function(COMPILED_WR_DATA, BREAKOUT_WR_REL_COLUMNS, BREAKOUT_WR_FILE, wra.remove_non_breakout_wr)
+    must_draft_quarterbacks = create_analytical_function(COMPILED_QB_DATA, MUST_DRAFT_QB_REL_COLUMNS, MUST_DRAFT_QB_FILE, qba.remove_non_breakout_qbs)
 
     # Execute player analysis functions.
     legendary_runningbacks()
     deadzone_runningbacks()
     hero_pair_runningbacks()
     breakout_receivers()
+    must_draft_quarterbacks()
 
 
 if __name__ == '__main__':
