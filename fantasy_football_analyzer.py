@@ -57,7 +57,7 @@ MAIN_QB_CSV = f'./{YEAR - 1}_data/data_qb_stats.csv'
 
 def create_rb_csv() -> None:
     """
-    Create a containing all the RB data for RBs with an ADP.
+    Create a containing all the RB data for RBs with an ADP, sorted by ADP.
 
     :return: None.
     """
@@ -78,7 +78,7 @@ def create_rb_csv() -> None:
 
 def create_wr_csv() -> None:
     """
-    Create a containing all the WR data for WRs with an ADP.
+    Create a containing all the WR data for WRs with an ADP, sorted by ADP.
 
     :return: None.
     """
@@ -97,21 +97,21 @@ def create_wr_csv() -> None:
     
 def create_qb_csv() -> None:
     """
-    Create a containing all the QB data for QBs with an ADP.
+    Create a containing all the QB data for QBs with an ADP, sorted by ADP.
 
     :return: None.
     """
-    # if not os.path.exists(COMPILED_QB_DATA):
-    primary_dataframe = pd.read_csv(MAIN_QB_CSV, usecols = NECESSARY_QB_COLUMNS)
-    primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
-    primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
-    primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_PASS_GRADE, 0, 23, 'offenseGrade')
-    primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
-    primary_dataframe = primary_dataframe.sort_values('ADP')
-    primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
-    primary_dataframe.reset_index(inplace=True)
-    primary_dataframe.drop('index', axis=1, inplace=True)
-    primary_dataframe.to_csv(COMPILED_QB_DATA)
+    if not os.path.exists(COMPILED_QB_DATA):
+        primary_dataframe = pd.read_csv(MAIN_QB_CSV, usecols = NECESSARY_QB_COLUMNS)
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_ADPS, 1, 5, 'ADP')
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_AGE, 1, 4, 'age')
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, PLAYER_PASS_GRADE, 0, 23, 'offenseGrade')
+        primary_dataframe = md.add_extra_datapoints(primary_dataframe, TEAM_OL_RANK, 0, 1, 'olRank', base_index = 1)
+        primary_dataframe = primary_dataframe.sort_values('ADP')
+        primary_dataframe = primary_dataframe.dropna(subset=['ADP'])
+        primary_dataframe.reset_index(inplace=True)
+        primary_dataframe.drop('index', axis=1, inplace=True)
+        primary_dataframe.to_csv(COMPILED_QB_DATA)
 
 
 def create_analytical_function(stat_file: str, rel_columns: list, file_name: str, analyzer):
