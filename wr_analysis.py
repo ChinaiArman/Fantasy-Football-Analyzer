@@ -28,7 +28,7 @@ def remove_non_breakout_wr(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe['trgt%'] = (dataframe['recTarg'] / ((dataframe['teamTargets'] / 17) * dataframe['games'])) * 100
     dataframe = dataframe[(dataframe['ADP'] >= 30) & (dataframe['ADP'] <= 100)]
     dataframe = dataframe[dataframe['trgt%'] >= 20]
-    dataframe = dataframe[dataframe['recGrade'] >= 78]
+    dataframe = dataframe[dataframe['recGrade'] >= 75]
     dataframe = dataframe[dataframe['age'] <= 25]
     removable_elements = [element for element in dataframe.columns if element not in ['player', 'team', 'age', 'ADP']]
     dataframe = dataframe.drop((element for element in removable_elements), axis=1)
