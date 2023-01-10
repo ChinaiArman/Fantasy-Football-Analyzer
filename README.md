@@ -22,7 +22,7 @@ Create a python application to analyze fantasy football data and identify potent
 
 ---
 
-###`What Is Fantasy Football?:`
+### `What Is Fantasy Football?:`
 
 Fantasy Football is a form of sports betting. The objective is to assemble a winning team of players from the NFL. The performance of each team hinges on the performance of the players in the actual game. The better the player plays in the NFL, the more points they generate in Fantasy. Participants play in a league (usually of size 12) in a season long competition. The format is as follows
 
