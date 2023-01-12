@@ -12,7 +12,7 @@ Create a python application to analyze fantasy football data and identify potent
 
 * GitHub: https://github.com/ChinaiArman/Fantasy-Football-Analyzer
 * Figma: https://www.figma.com/file/NfDNQX0DYgagGRk15F5Nuq/Fantasy-Football-Analyzer-Figma?node-id=0%3A1&t=q6QbbwZOgAhM718W-0
-* TRELLO: https://trello.com/invite/b/MLI7WDYs/ATTI1c2108e78f7c47088e510d18df0ecbfd6FD8E060/agile-planning-board
+* Trello: https://trello.com/invite/b/MLI7WDYs/ATTI1c2108e78f7c47088e510d18df0ecbfd6FD8E060/agile-planning-board
 
 ### Technologies Used:
 
